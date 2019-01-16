@@ -33,10 +33,10 @@ CSVの左n列をコメント列扱いとして、無視する(取り込まない
 テストデータに対してのコメント列として使える。
 
 ```php
-$ds = new Iamapen\ExcelFriendlyDataSet\Database\DataSet\CommentableCsvDataSet(",");
-$ds->setIgnoreColumnCount(1);    // 1列目を無視
+$ds = new \Iamapen\CommentableDataSet\DbUnit\DataSet\CommentableCsvDataSet();
+$ds->addTable('users', '/PATH/TO/users.csv');
+$ds->setIgnoreColumnCount(1);    // 1列目をコメント列とする
 ```
-
 CSVの例
 ```csv
 最初の列はコメント,id,user_name
@@ -44,6 +44,15 @@ CSVの例
 女性女性ユーザ,2,arare norimaki
 1ヶ月以上ログインしてないユーザ,3,akane kimidori
 削除されるユーザ,4,gajira norimaki
+```
+
+もちろん他の DataSet との比較もできる
+```php
+class XxxTest extends \PHPUnit\DbUnit\TestCase {
+  function testXXX() {
+      $this->assertDataSetsEqual($ds1, $ds2);
+  }
+}
 ```
 
 
@@ -85,15 +94,17 @@ MySQL専用。(一応SQLiteでも動く)
 あまりに入力CSVが大きいと、`max_allowed_packet` の制限にかかる可能性がある。これは課題。
 
 ```php
-use Iamapen\ExcelFriendlyDataSet\Database\DataSet\CommentableCsvDataSet;
-use Iamapen\ExcelFriendlyDataSet\Database\Operation\MySqlBulkInsert;
+use Iamapen\CommentableDataSet\DbUnit\DataSet\CommentableCsvDataSet;
+use Iamapen\CommentableDataSet\DbUnit\Operation\MySqlBulkInsert;
 
 // DataSet
-$ds = new CommentableCsvDataSet('PATH/TO/CSV');
+$ds = new CommentableCsvDataSet();
+$ds->addTable('/PATH/TO/CSV');
 
-// 実行
-$operation = new MySqlBulkInsert();
-$operation->execute($this->getConnection(), $ds);
+// 実行 (TRUNCATE -> BULK INSERT)
+$con = new \PHPUnit\DbUnit\Database\DefaultConnection($pdo);
+\PHPUnit\DbUnit\Operation\Factory::TRUNCATE()->execute($con, $ds);
+(new MySqlBulkInsert())->execute($con, $ds);
 ```
 
 

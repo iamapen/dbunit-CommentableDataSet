@@ -20,6 +20,9 @@ CREATE TABLE users(
 );
 */
 
+use Iamapen\CommentableDataSet\DbUnit\DataSet\CommentableCsvDataSet;
+use Iamapen\CommentableDataSet\DbUnit\Operation\MySqlBulkInsert;
+
 require __DIR__ . '/vendor/autoload.php';
 
 // fgetcsv() on Windows + PHP7 の都合
@@ -40,7 +43,7 @@ $pdo->query('SET SESSION FOREIGN_KEY_CHECKS=0;');
 
 // CSV を DataSet として読み込み
 $con = new \PHPUnit\DbUnit\Database\DefaultConnection($pdo);
-$csvDs = new \Iamapen\CommentableDataSet\DbUnit\DataSet\CommentableCsvDataSet();
+$csvDs = new CommentableCsvDataSet();
 $csvDs->setIgnoreColumnCount(1);    // 1列目はコメントとする
 $csvDs->addTable('users', __DIR__.'/unittest/fixtures/CsvDataSets/users.csv');
 
@@ -49,9 +52,9 @@ $ds = new \PHPUnit\DbUnit\DataSet\ReplacementDataSet($csvDs);
 $ds->addFullReplacement('<null>', null);
 
 // TRUNCATE -> INSERT の例
-$op = \PHPUnit\DbUnit\Operation\Factory::CLEAN_INSERT()->execute($con, $ds);
+\PHPUnit\DbUnit\Operation\Factory::CLEAN_INSERT()->execute($con, $ds);
 
 // TRUNCATE -> BULK INSERT の例
-$op = \PHPUnit\DbUnit\Operation\Factory::TRUNCATE()->execute($con, $ds);
-$operation = new \Iamapen\CommentableDataSet\DbUnit\Operation\MySqlBulkInsert();
-$operation->execute($con, $ds);
+\PHPUnit\DbUnit\Operation\Factory::TRUNCATE()->execute($con, $ds);
+(new MySqlBulkInsert())->execute($con, $ds);
+
