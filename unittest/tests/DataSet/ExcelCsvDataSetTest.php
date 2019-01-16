@@ -111,6 +111,12 @@ asdflkjsadf asdfsadfhl "adsf, halsdf" sadfhlasdf'
             '列2' => 'い',
             '列3' => '髙',
         ));
+        $table1->addRow(array(
+            'table1_id' => 1,
+            '列1' => 'ア',
+            '列2' => 'イ',
+            '列3' => 'ウ',
+        ));
         $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_DefaultDataSet(array($table1));
 
         \PHPUnit_Extensions_Database_TestCase::assertDataSetsEqual($expectedDataSet, $dataSet);
