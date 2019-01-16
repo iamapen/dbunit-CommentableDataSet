@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="CommentableCsvDataSet">
+  <description>Puyo Coding Standard</description>
+  <rule ref="PSR12">
+    <!--
+    <exclude name="PSR12.Operators.OperatorSpacing.NoSpaceBefore"/>
+    <exclude name="PSR12.Operators.OperatorSpacing.NoSpaceAfter"/>
+    <exclude name="PSR2.Classes.PropertyDeclaration.Underscore"/>
+    <exclude name="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpaceBeforeEquals"/>
+    <exclude name="Squiz.ControlStructures.ForEachLoopDeclaration.NoSpaceAfterArrow"/>
+    <exclude name="Squiz.ControlStructures.ForEachLoopDeclaration.NoSpaceBeforeArrow"/>
+    <exclude name="Squiz.Functions.MultiLineFunctionDeclaration.SpaceAfterFunction"/>
+    <exclude name="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpaceAfterDefault"/>
+    <exclude name="Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine"/>
+    <exclude name="Squiz.ControlStructures.ControlSignature.SpaceAfterKeyword"/>
+    -->
+  </rule>
+</ruleset>

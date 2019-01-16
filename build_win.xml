@@ -1,0 +1,139 @@
+<project name="iamapen/dbunit-CommentableCsvDataSet" default="build" basedir=".">
+  <property environment="env"/>
+  <property name="report_dir" value="_build"/>
+  <property name="source" value="src" />
+
+
+  <!--<property name="PHP_BIN" value="C:\xampp-7.0.31-0\php\php.exe"/>-->
+  <property name="PHP_BIN" value="C:\xampp-7.1.21-0\php\php.exe"/>
+  <!--<property name="PHP_BIN" value="C:\xampp-7.2.12-0\php\php.exe"/>-->
+  <property name="COMPOSER_BIN" value="C:\projects\poppy\utLib\composer-1.8.0"/>
+  <property name="PHPUNIT_BIN" value="vendor/phpunit/phpunit/phpunit"/>
+
+  <property name="PDEPEND_BIN" value="C:\projects\phpLib\phpmd-2.6.0\vendor\pdepend\pdepend\src\bin\pdepend"/>
+  <property name="PHPMD_BIN" value="C:\projects\phpLib\phpmd-2.6.0\vendor\phpmd\phpmd\src\bin\phpmd"/>
+  <property name="PHPCPD_BIN" value="${env.PHPCPD_BIN}"/>
+  <property name="PHPLOC_BIN" value="${env.PHPLOC_BIN}"/>
+  <property name="PHPCS_BIN" value="${env.PHPCS_BIN}"/>
+  <property name="PHPDOC_BIN" value="${env.PHPDOC_BIN}"/>
+  <property name="PHPCB_BIN" value="${env.PHPCB_BIN}"/>
+  <property name="PHPDOX_BIN" value="${env.PHPDOX_BIN}"/>
+
+
+  <target name="info">
+    <echo message="PHP_BIN = ${PHP_BIN}"/>
+    <echo message="COMPOSER_BIN = ${COMPOSER_BIN}"/>
+  </target>
+
+  <target name="clean" description="Clean up and create artifact directories">
+    <delete dir="${report_dir}/api" />
+    <delete dir="${report_dir}/code-browser" />
+    <delete dir="${report_dir}/coverage" />
+    <delete dir="${report_dir}/logs" />
+    <delete dir="${report_dir}/pdepend" />
+
+    <mkdir dir="${report_dir}/api" />
+    <mkdir dir="${report_dir}/code-browser" />
+    <mkdir dir="${report_dir}/coverage" />
+    <mkdir dir="${report_dir}/logs" />
+    <mkdir dir="${report_dir}/pdepend" />
+  </target>
+
+  <target name="composer-dev" description="install depend libraries">
+    <exec executable="${PHP_BIN}" failonerror="true">
+      <arg path="${COMPOSER_BIN}"/>
+      <arg value="install"/>
+      <arg value="--dev"/>
+    </exec>
+  </target>
+  <target name="composer" description="install depend libraries">
+    <exec executable="${PHP_BIN}" failonerror="true">
+      <arg path="${COMPOSER_BIN}"/>
+      <arg value="install"/>
+      <arg value="--no-dev"/>
+    </exec>
+  </target>
+
+  <target name="phpunit" description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
+    <exec executable="${PHP_BIN}" failonerror="true">
+      <arg path="${PHPUNIT_BIN}"/>
+      <arg value="-c"/>
+      <arg path="./unittest/phpunit_ci.xml"/>
+      <arg path="./unittest/tests"/>
+    </exec>
+  </target>
+
+  <target name="parallelTasks" description="Run the pdepend, phpmd, phpcpd, phpcs, phpdoc and phploc tasks in parallel using a maximum of 2 threads.">
+    <parallel threadCount="2">
+      <sequential>
+        <antcall target="pdepend" />
+        <antcall target="phpmd" />
+      </sequential>
+      <antcall target="phpcpd" />
+      <antcall target="phpcs" />
+      <antcall target="phpdoc" />
+      <antcall target="phploc" />
+    </parallel>
+  </target>
+
+  <target name="pdepend" description="Generate jdepend.xml and software metrics charts using PHP_Depend">
+    <exec executable="${PHP_BIN}">
+      <arg line="${PDEPEND_BIN} --jdepend-xml=${report_dir}/logs/jdepend.xml
+              --jdepend-chart=${report_dir}/pdepend/dependencies.svg
+              --overview-pyramid=${report_dir}/pdepend/overview-pyramid.svg
+              ${source}" />
+    </exec>
+  </target>
+
+  <target name="phpmd" description="Generate pmd.xml using PHPMD">
+    <exec executable="${PHP_BIN}">
+      <arg line="${PHPMD_BIN} ${source}
+              xml
+              pmd.xml
+              --reportfile ${report_dir}/logs/pmd.xml" />
+    </exec>
+  </target>
+
+  <target name="phpcpd" description="Generate pmd-cpd.xml using PHPCPD">
+    <exec executable="${PHP_BIN}">
+      <arg line="${PHPCPD_BIN} --log-pmd ${report_dir}/logs/pmd-cpd.xml ${source}" />
+    </exec>
+  </target>
+
+  <target name="phploc" description="Generate phploc.csv">
+    <exec executable="${PHP_BIN}">
+      <arg line="${PHPLOC_BIN} --log-csv ${report_dir}/logs/phploc.csv ${source}" />
+    </exec>
+  </target>
+
+  <target name="phpcs" description="Generate checkstyle.xml using PHP_CodeSniffer">
+    <exec executable="${PHP_BIN}" output="/dev/null">
+      <arg line="${PHPCS_BIN} --report=checkstyle
+              --report-file=${report_dir}/logs/checkstyle.xml
+              --standard=checkstyle.xml
+              ${source}" />
+    </exec>
+  </target>
+
+  <target name="phpdoc" description="Generate API documentation using PHPDocumentor">
+    <exec executable="${PHP_BIN}">
+      <arg line="${PHPDOC_BIN} -d ${source} -t ${report_dir}/api" />
+    </exec>
+  </target>
+
+  <target name="phpcb" description="Aggregate tool output with PHP_CodeBrowser">
+    <exec executable="${PHP_BIN}">
+      <arg line="${PHPCB_BIN} --log ${report_dir}/logs
+              --source ${source}
+              --output ${report_dir}/code-browser" />
+    </exec>
+  </target>
+
+  <target name="phpdox" description="Generate API documentation using PHPDox">
+    <exec executable="${PHP_BIN}">
+      <arg line="${PHPDOX_BIN} -f phpdox.xml"/>
+    </exec>
+  </target>
+
+  <target name="build" depends="clean,composer-dev,parallelTasks,phpunit,phpcb" />
+</project>
