@@ -1,6 +1,5 @@
 <?php
-namespace Iamapen\ExcelFriendlyDataSet\Database\Operation;
-
+namespace Iamapen\CommentableDataSet\DbUnit\Operation;
 /**
  * Bulk Insert (only MySQL)
  *

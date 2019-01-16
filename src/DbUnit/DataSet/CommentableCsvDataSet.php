@@ -1,6 +1,6 @@
 <?php
 
-namespace Iamapen\ExcelFriendlyDataSet\Database\DataSet;
+namespace Iamapen\CommentableDataSet\DbUnit\DataSet;
 
 /**
  * Ignore N columns from left.

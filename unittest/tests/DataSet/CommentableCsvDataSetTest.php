@@ -1,21 +1,22 @@
 <?php
-use Iamapen\ExcelFriendlyDataSet\Database\DataSet\CommentableCsvDataSet;
+namespace Iamapen\CommentableDataSet\Unittest;
+use Iamapen\CommentableDataSet\DbUnit\DataSet\CommentableCsvDataSet;
 
-class CommentableCsvDataSetTest extends PHPUnit_Framework_TestCase
+class CommentableCsvDataSetTest extends \PHPUnit_Framework_TestCase
 {
     protected $expectedDataSet;
 
     public function testCSVDataSet()
     {
-        $table1MetaData = new PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData(
+        $table1MetaData = new \PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData(
             'table1', array('table1_id', 'column1', 'column2', 'column3', 'column4')
         );
-        $table2MetaData = new PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData(
+        $table2MetaData = new \PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData(
             'table2', array('table2_id', 'column5', 'column6', 'column7', 'column8')
         );
 
-        $table1 = new PHPUnit_Extensions_Database_DataSet_DefaultTable($table1MetaData);
-        $table2 = new PHPUnit_Extensions_Database_DataSet_DefaultTable($table2MetaData);
+        $table1 = new \PHPUnit_Extensions_Database_DataSet_DefaultTable($table1MetaData);
+        $table2 = new \PHPUnit_Extensions_Database_DataSet_DefaultTable($table2MetaData);
 
         $table1->addRow(array(
             'table1_id' => 1,
@@ -62,25 +63,25 @@ class CommentableCsvDataSetTest extends PHPUnit_Framework_TestCase
 asdflkjsadf asdfsadfhl "adsf, halsdf" sadfhlasdf'
         ));
 
-        $expectedDataSet = new PHPUnit_Extensions_Database_DataSet_DefaultDataSet(array($table1, $table2));
+        $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_DefaultDataSet(array($table1, $table2));
 
         $csvDataSet = new CommentableCsvDataSet();
         $csvDataSet->addTable('table1', dirname(__FILE__).'/../../fixtures/CsvDataSets/table1.csv');
         $csvDataSet->addTable('table2', dirname(__FILE__).'/../../fixtures/CsvDataSets/table2.csv');
 
-        PHPUnit_Extensions_Database_TestCase::assertDataSetsEqual($expectedDataSet, $csvDataSet);
+        \PHPUnit_Extensions_Database_TestCase::assertDataSetsEqual($expectedDataSet, $csvDataSet);
     }
 
     function testCSVDataSet_commentable() {
-        $table1MetaData = new PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData(
+        $table1MetaData = new \PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData(
             'table1', array('column1', 'column2', 'column3', 'column4')
         );
-        $table2MetaData = new PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData(
+        $table2MetaData = new \PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData(
             'table2', array('column5', 'column6', 'column7', 'column8')
         );
 
-        $table1 = new PHPUnit_Extensions_Database_DataSet_DefaultTable($table1MetaData);
-        $table2 = new PHPUnit_Extensions_Database_DataSet_DefaultTable($table2MetaData);
+        $table1 = new \PHPUnit_Extensions_Database_DataSet_DefaultTable($table1MetaData);
+        $table2 = new \PHPUnit_Extensions_Database_DataSet_DefaultTable($table2MetaData);
 
         $table1->addRow(array(
             'column1' => 'tgfahgasdf',
@@ -121,13 +122,13 @@ asdflkjsadf asdfsadfhl "adsf, halsdf" sadfhlasdf'
 asdflkjsadf asdfsadfhl "adsf, halsdf" sadfhlasdf'
         ));
 
-        $expectedDataSet = new PHPUnit_Extensions_Database_DataSet_DefaultDataSet(array($table1, $table2));
+        $expectedDataSet = new \PHPUnit_Extensions_Database_DataSet_DefaultDataSet(array($table1, $table2));
 
         $csvDataSet = new CommentableCsvDataSet();
         $csvDataSet->setIgnoreColumnCount(1);
         $csvDataSet->addTable('table1', dirname(__FILE__).'/../../fixtures/CsvDataSets/table1.csv');
         $csvDataSet->addTable('table2', dirname(__FILE__).'/../../fixtures/CsvDataSets/table2.csv');
 
-        PHPUnit_Extensions_Database_TestCase::assertDataSetsEqual($expectedDataSet, $csvDataSet);
+        \PHPUnit_Extensions_Database_TestCase::assertDataSetsEqual($expectedDataSet, $csvDataSet);
     }
 }
