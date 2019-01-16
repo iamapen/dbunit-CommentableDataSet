@@ -1,28 +1,34 @@
 <?php
 namespace Iamapen\CommentableDataSet\DbUnit\Operation;
+
+use PHPUnit\DbUnit\Database\Connection;
+use PHPUnit\DbUnit\DataSet\IDataSet;
+use PHPUnit\DbUnit\DataSet\ITable;
+use PHPUnit\DbUnit\DataSet\ITableMetadata;
+
 /**
  * Bulk Insert (only MySQL)
  *
  * いずれ、バルクのチャンクサイズを指定できるようにしたい
  * @version 0.0.1
  */
-class MySqlBulkInsert implements \PHPUnit_Extensions_Database_Operation_IDatabaseOperation
+class MySqlBulkInsert implements \PHPUnit\DbUnit\Operation\Operation
 {
     protected $operationName = 'MYSQL_BULK_INSERT';
 
-    protected function buildOperationQuery(\PHPUnit_Extensions_Database_DataSet_ITableMetaData $databaseTableMetaData, \PHPUnit_Extensions_Database_DataSet_ITable $table, \PHPUnit_Extensions_Database_DB_IDatabaseConnection $connection, $rowCount)
+    protected function buildOperationQuery(ITableMetadata $databaseTableMetaData, ITable $table, Connection $connection, $rowCount)
     {
-        $columnCount = count($table->getTableMetaData()->getColumns());
+        $columnCount = \count($table->getTableMetaData()->getColumns());
 
         if ($columnCount > 0) {
-            $placeHolders = implode(', ', array_fill(0, $columnCount, '?'));
+            $placeHolders = \implode(', ', \array_fill(0, $columnCount, '?'));
 
             $columns = '';
             foreach ($table->getTableMetaData()->getColumns() as $column) {
                 $columns .= $connection->quoteSchemaObject($column) . ', ';
             }
 
-            $columns = substr($columns, 0, -2);
+            $columns = \substr($columns, 0, -2);
 
             $query = "
                 INSERT INTO {$connection->quoteSchemaObject($table->getTableMetaData()->getTableName())}
@@ -39,24 +45,13 @@ class MySqlBulkInsert implements \PHPUnit_Extensions_Database_Operation_IDatabas
 
             return $query;
         } else {
-            return FALSE;
+            return false;
         }
     }
 
-    protected function disablePrimaryKeys(\PHPUnit_Extensions_Database_DataSet_ITableMetaData $databaseTableMetaData, \PHPUnit_Extensions_Database_DataSet_ITable $table, \PHPUnit_Extensions_Database_DB_IDatabaseConnection $connection)
+    protected function buildOperationArguments(ITableMetadata $databaseTableMetaData, ITable $table, $row)
     {
-        if (count($databaseTableMetaData->getPrimaryKeys())) {
-            return TRUE;
-        }
-
-        return FALSE;
-    }
-
-
-
-    protected function buildOperationArguments(\PHPUnit_Extensions_Database_DataSet_ITableMetaData $databaseTableMetaData, \PHPUnit_Extensions_Database_DataSet_ITable $table, $row)
-    {
-        $args = array();
+        $args = [];
         foreach ($table->getTableMetaData()->getColumns() as $columnName) {
             $args[] = $table->getValue($row, $columnName);
         }
@@ -64,11 +59,20 @@ class MySqlBulkInsert implements \PHPUnit_Extensions_Database_Operation_IDatabas
         return $args;
     }
 
+    protected function disablePrimaryKeys(ITableMetadata $databaseTableMetaData, ITable $table, Connection $connection)
+    {
+        if (\count($databaseTableMetaData->getPrimaryKeys())) {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
-     * @param \PHPUnit_Extensions_Database_DB_IDatabaseConnection $connection
-     * @param \PHPUnit_Extensions_Database_DataSet_IDataSet       $dataSet
+     * @param Connection $connection
+     * @param IDataSet   $dataSet
      */
-    public function execute(\PHPUnit_Extensions_Database_DB_IDatabaseConnection $connection, \PHPUnit_Extensions_Database_DataSet_IDataSet $dataSet)
+    public function execute(Connection $connection, IDataSet $dataSet)
     {
         $databaseDataSet = $connection->createDataSet();
 
@@ -77,9 +81,11 @@ class MySqlBulkInsert implements \PHPUnit_Extensions_Database_Operation_IDatabas
         foreach ($dsIterator as $table) {
             $rowCount = $table->getRowCount();
 
-            if($rowCount == 0) continue;
+            if ($rowCount == 0) {
+                continue;
+            }
 
-            /* @var $table \PHPUnit_Extensions_Database_DataSet_ITable */
+            /* @var $table ITable */
             $databaseTableMetaData = $databaseDataSet->getTableMetaData($table->getTableMetaData()->getTableName());
 
             $disablePrimaryKeys    = $this->disablePrimaryKeys($databaseTableMetaData, $table, $connection);
@@ -92,31 +98,30 @@ class MySqlBulkInsert implements \PHPUnit_Extensions_Database_Operation_IDatabas
             $bulkI = 0;
             while ($bulkI < $rowCount) {
                 $chunkLen = 0;
-                $argsList = array();
+                $args = [];
                 for ($i=0; $i<100; $i++) {
                     $rowNum = $bulkI + $i;
                     if ($rowNum >= $rowCount) {
                         break;
                     }
-                    $argsList = array_merge($argsList, $this->buildOperationArguments($databaseTableMetaData, $table, $rowNum));
+                    $args = array_merge($args, $this->buildOperationArguments($databaseTableMetaData, $table, $rowNum));
                     $chunkLen++;
                 }
 
                 $query = $this->buildOperationQuery($databaseTableMetaData, $table, $connection, $chunkLen);
-                if ($query === FALSE) {
+                if ($query === false) {
                     if ($table->getRowCount() > 0) {
-                        throw new \PHPUnit_Extensions_Database_Operation_Exception($this->operationName, '', array(), $table, 'Rows requested for insert, but no columns provided!');
+                        throw new \PHPUnit\DbUnit\Operation\Exception($this->operationName, '', [], $table, 'Rows requested for insert, but no columns provided!');
                     }
                     continue;
                 }
 
                 try {
                     $statement = $connection->getConnection()->prepare($query);
-                    $statement->execute($argsList);
-                }
-                catch (\Exception $e) {
-                    throw new \PHPUnit_Extensions_Database_Operation_Exception(
-                        $this->operationName, $query, $argsList, $table, $e->getMessage()
+                    $statement->execute($args);
+                } catch (\Exception $e) {
+                    throw new \PHPUnit\DbUnit\Operation\Exception(
+                        $this->operationName, $query, $args, $table, $e->getMessage()
                     );
                 }
 

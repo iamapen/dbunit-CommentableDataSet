@@ -7,7 +7,7 @@ require_once dirname(dirname(__FILE__)) . "/../fixtures" . '/DatabaseTestUtility
 /**
  * @since      File available since Release 1.0.0
  */
-class Extensions_Database_Operation_OperationsTest extends \PHPUnit_Extensions_Database_TestCase
+class Extensions_Database_Operation_OperationsTest extends \PHPUnit\DbUnit\TestCase
 {
     protected function setUp()
     {
@@ -20,17 +20,25 @@ class Extensions_Database_Operation_OperationsTest extends \PHPUnit_Extensions_D
 
     public function getConnection()
     {
-        return new \PHPUnit_Extensions_Database_DB_DefaultDatabaseConnection(\DBUnitTestUtility::getSQLiteMemoryDB(), 'sqlite');
+        return new \PHPUnit\DbUnit\Database\DefaultConnection(\DBUnitTestUtility::getSQLiteMemoryDB(), 'sqlite');
     }
 
     public function getDataSet()
     {
-        return new \PHPUnit_Extensions_Database_DataSet_FlatXmlDataSet(dirname(__FILE__).'/../../fixtures/XmlDataSets/OperationsTestFixture.xml');
+        return new \PHPUnit\DbUnit\DataSet\FlatXmlDataSet(
+            dirname(__FILE__).'/../../fixtures/XmlDataSets/OperationsTestFixture.xml'
+        );
     }
 
     public function testMysqlBulkInsert() {
         $operation = new MySqlBulkInsert();
-        $operation->execute($this->getConnection(), new \PHPUnit_Extensions_Database_DataSet_FlatXmlDataSet(dirname(__FILE__).'/../../fixtures/XmlDataSets/InsertOperationTest.xml'));
-        $this->assertDataSetsEqual(new \PHPUnit_Extensions_Database_DataSet_FlatXmlDataSet(dirname(__FILE__).'/../../fixtures/XmlDataSets/InsertOperationResult.xml'), $this->getConnection()->createDataSet());
+        $operation->execute(
+            $this->getConnection(),
+            new \PHPUnit\DbUnit\DataSet\FlatXmlDataSet(dirname(__FILE__).'/../../fixtures/XmlDataSets/InsertOperationTest.xml')
+        );
+        $this->assertDataSetsEqual(
+            new \PHPUnit\DbUnit\DataSet\FlatXmlDataSet(dirname(__FILE__).'/../../fixtures/XmlDataSets/InsertOperationResult.xml'),
+            $this->getConnection()->createDataSet()
+        );
     }
 }

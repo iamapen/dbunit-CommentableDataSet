@@ -2,6 +2,8 @@
 
 namespace Iamapen\CommentableDataSet\DbUnit\DataSet;
 
+use PHPUnit\DbUnit\InvalidArgumentException;
+
 /**
  * Excel-friendly CSV DataSet. (multibyte locale)
  *
@@ -43,35 +45,33 @@ class ExcelCsvDataSet extends CommentableCsvDataSet
      */
     public function addTable($tableName, $csvFile)
     {
-        if (!is_file($csvFile)) {
-            throw new \InvalidArgumentException("Could not find csv file: {$csvFile}");
+        if (!\is_file($csvFile)) {
+            throw new InvalidArgumentException("Could not find csv file: {$csvFile}");
         }
 
-        if (!is_readable($csvFile)) {
-            throw new \InvalidArgumentException("Could not read csv file: {$csvFile}");
+        if (!\is_readable($csvFile)) {
+            throw new InvalidArgumentException("Could not read csv file: {$csvFile}");
         }
 
-        $fh      = fopen($csvFile, 'rb');
+        $fh      = \fopen($csvFile, 'rb');
         fseek($fh, 2);  // after BOM
 
-        // TODO chunk
+        // TODO streaming
         $tmpFp = fopen('php://temp', 'w+b');
         fwrite($tmpFp, mb_convert_encoding(stream_get_contents($fh), 'UTF-8', 'UTF-16LE'));
         rewind($tmpFp);
 
         $columns = $this->getCsvRow($tmpFp);
 
-        if ($columns === FALSE)
-        {
-            throw new \InvalidArgumentException("Could not determine the headers from the given file {$csvFile}");
+        if ($columns === false) {
+            throw new InvalidArgumentException("Could not determine the headers from the given file {$csvFile}");
         }
 
-        $metaData = new \PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData($tableName, $columns);
-        $table    = new \PHPUnit_Extensions_Database_DataSet_DefaultTable($metaData);
+        $metaData = new \PHPUnit\DbUnit\DataSet\DefaultTableMetadata($tableName, $columns);
+        $table    = new \PHPUnit\DbUnit\DataSet\DefaultTable($metaData);
 
-        while (($row = $this->getCsvRow($tmpFp)) !== FALSE)
-        {
-            $table->addRow(array_combine($columns, $row));
+        while (($row = $this->getCsvRow($tmpFp)) !== false) {
+            $table->addRow(\array_combine($columns, $row));
         }
 
         $this->tables[$tableName] = $table;
