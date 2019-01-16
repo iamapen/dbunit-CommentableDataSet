@@ -7,6 +7,31 @@ class ExcelCsvDataSetTest extends \PHPUnit_Framework_TestCase
 {
     protected $expectedDataSet;
 
+    protected $orgLcCtype;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        // ライブラリ内に実装するか迷ったが、Windows+PHP7でfgetcsv() を使う箇所すべての問題であること、
+        // ライブラリ内で勝手にlocaleを変える挙動の是非から、アプリレイヤに任せることにした。
+        if (version_compare(PHP_VERSION, '5.3.0', '>') && 0 === strpos(PHP_OS, 'WIN')) {
+            $this->orgLcCtype = setlocale(LC_CTYPE, '0');
+            if (0 === strpos(PHP_OS, 'WIN')) {
+                setlocale(LC_CTYPE, 'C');
+            }
+        }
+    }
+
+    protected function tearDown()
+    {
+        if (version_compare(PHP_VERSION, '5.3.0', '>') && 0 === strpos(PHP_OS, 'WIN')) {
+            setlocale(LC_CTYPE, $this->orgLcCtype);
+        }
+
+        parent::tearDown();
+    }
+
     public function testCSVDataSet()
     {
         $table1MetaData = new \PHPUnit_Extensions_Database_DataSet_DefaultTableMetaData(
