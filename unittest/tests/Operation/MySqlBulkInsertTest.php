@@ -9,7 +9,7 @@ require_once dirname(dirname(__FILE__)) . "/../fixtures" . '/DatabaseTestUtility
  */
 class Extensions_Database_Operation_OperationsTest extends \PHPUnit\DbUnit\TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         if (!extension_loaded('pdo_sqlite')) {
             $this->markTestSkipped('PDO/SQLite is required to run this test.');

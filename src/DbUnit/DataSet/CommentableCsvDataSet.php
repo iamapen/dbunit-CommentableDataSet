@@ -37,10 +37,10 @@ class CommentableCsvDataSet extends \PHPUnit\DbUnit\DataSet\CsvDataSet
      */
     protected function getCsvRow($fh)
     {
-        if (version_compare(PHP_VERSION, '5.3.0', '>')) {
-            $rows = fgetcsv($fh, null, $this->delimiter, $this->enclosure, $this->escape);
+        if (\version_compare(PHP_VERSION, '5.3.0', '>')) {
+            $rows = \fgetcsv($fh, null, $this->delimiter, $this->enclosure, $this->escape);
         } else {
-            $rows = fgetcsv($fh, null, $this->delimiter, $this->enclosure);
+            $rows = \fgetcsv($fh, null, $this->delimiter, $this->enclosure);
         }
 
         if ($rows === false) {

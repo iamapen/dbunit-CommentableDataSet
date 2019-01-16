@@ -44,9 +44,9 @@ class MySqlBulkInsert implements \PHPUnit\DbUnit\Operation\Operation
             $query .= $bulk;
 
             return $query;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     protected function buildOperationArguments(ITableMetadata $databaseTableMetaData, ITable $table, $row)
@@ -72,7 +72,7 @@ class MySqlBulkInsert implements \PHPUnit\DbUnit\Operation\Operation
      * @param Connection $connection
      * @param IDataSet   $dataSet
      */
-    public function execute(Connection $connection, IDataSet $dataSet)
+    public function execute(Connection $connection, IDataSet $dataSet): void
     {
         $databaseDataSet = $connection->createDataSet();
 
@@ -114,6 +114,10 @@ class MySqlBulkInsert implements \PHPUnit\DbUnit\Operation\Operation
                         throw new \PHPUnit\DbUnit\Operation\Exception($this->operationName, '', [], $table, 'Rows requested for insert, but no columns provided!');
                     }
                     continue;
+                }
+
+                if ($disablePrimaryKeys) {
+                    $connection->disablePrimaryKeys($databaseTableMetaData->getTableName());
                 }
 
                 try {

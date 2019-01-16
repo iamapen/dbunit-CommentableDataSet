@@ -43,7 +43,7 @@ class ExcelCsvDataSet extends CommentableCsvDataSet
      * @param string $tableName
      * @param string $csvFile
      */
-    public function addTable($tableName, $csvFile)
+    public function addTable($tableName, $csvFile): void
     {
         if (!\is_file($csvFile)) {
             throw new InvalidArgumentException("Could not find csv file: {$csvFile}");
