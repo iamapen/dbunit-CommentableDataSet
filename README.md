@@ -13,13 +13,13 @@ Install
 UT用なので `require --dev` になる。
 
 ```bash
-composer require --dev iamapen/commentable-csv-data-set
+composer require --dev iamapen/commentable-data-set
 ```
 
 手動で composer.json に書く場合
 ```
 require-dev: {
-  "iamapen/commentable-csv-data-set ": ">=4.0"
+  "iamapen/commentable-data-set ": ">=4.0"
 }
 ```
 
