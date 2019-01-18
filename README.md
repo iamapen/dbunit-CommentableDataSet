@@ -129,3 +129,4 @@ $con = new \PHPUnit\DbUnit\Database\DefaultConnection($pdo);
 | 2.0.x       | 5.4+, 7.0+ | 4.x, 5.x | 2.x    |
 | 1.1.x       | 5.3+       | 3.x, 4.x | 1.x    |
 | 1.0.x (EOL) | 5.3+       | 3.x      | 1.x    |
+
