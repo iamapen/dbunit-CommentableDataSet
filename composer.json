@@ -1,8 +1,8 @@
 {
-  "name": "iamapen/commentable-csv-data-set",
+  "name": "iamapen/commentable-data-set",
   "type": "library",
   "description": "Commentable CSV DataSet for DBUnit",
-  "homepage": "https://github.com/iamapen/dbunit-CommentableCsvDataSet",
+  "homepage": "https://github.com/iamapen/dbunit-CommentableDataSet",
   "keywords": ["phpunit", "dbunit"],
   "license": "MIT",
 
