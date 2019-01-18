@@ -1,0 +1,31 @@
+<phpunit backupGlobals="false"
+     backupStaticAttributes="false"
+     bootstrap="../vendor/autoload.php"
+     cacheTokens="true"
+     colors="true"
+     convertErrorsToExceptions="true"
+     convertNoticesToExceptions="true"
+     convertWarningsToExceptions="true"
+     forceCoversAnnotation="false"
+     processIsolation="false"
+     stopOnError="false"
+     stopOnFailure="false"
+     stopOnIncomplete="false"
+     stopOnSkipped="false"
+     stderr="true"
+     verbose="true">
+
+  <php>
+    <var name="VARNAME" value="value"/>
+  </php>
+
+  <filter>
+    <whitelist>
+      <directory suffix=".php">../lib</directory>
+      <exclude>
+        <directory>../src/dummyDir</directory>
+        <file>../src/dummyFile</file>
+      </exclude>
+    </whitelist>
+  </filter>
+</phpunit>

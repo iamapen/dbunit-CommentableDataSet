@@ -5,25 +5,56 @@
  * dbunit単体で利用可。
  */
 
-require 'PATH/TO/autoload.php';
+ /*
+CREATE DATABASE commentable_ds DEFAULT CHARACTER SET 'utf8mb4';
+CREATE USER IF NOT EXISTS 'dbuser'@'localhost' IDENTIFIED BY 'dbpass';
+GRANT ALL ON commentable_ds.* TO 'dbuser'@'localhost';
+use commentable_ds;
 
-$host = '192.168.33.10';
+CREATE TABLE users(
+  id int AUTO_INCREMENT,
+  last_name varchar(100),
+  first_name varchar(100),
+  nickname varchar(100),
+  PRIMARY KEY(id)
+);
+*/
+
+use Iamapen\CommentableDataSet\DbUnit\DataSet\CommentableCsvDataSet;
+use Iamapen\CommentableDataSet\DbUnit\Operation\MySqlBulkInsert;
+
+require __DIR__ . '/vendor/autoload.php';
+
+// fgetcsv() on Windows + PHP7 の都合
+if (version_compare(PHP_VERSION, '5.3.0', '>') && 0 === strpos(PHP_OS, 'WIN')) {
+    if (0 === strpos(PHP_OS, 'WIN')) {
+        setlocale(LC_CTYPE, 'C');
+    }
+}
+
+$host = '127.0.0.1';
 $port = '3306';
-$user = 'leleco';
-$pw = 'leleco';
-$dbname = 'leleco';
+$user = 'dbuser';
+$pw = 'dbpass';
+$dbname = 'commentable_ds';
 
 $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname;charset=utf8", $user, $pw);
 $pdo->query('SET SESSION FOREIGN_KEY_CHECKS=0;');
 
-$con = new PHPUnit_Extensions_Database_DB_DefaultDatabaseConnection($pdo);
-$csvDs = new Iamapen\ExcelFriendlyDataSet\ExcelCsvDataSet("\t", '"', '"');
-$csvDs->setIgnoreColumnCount(1);
-$csvDs->addTable('users', 'PATH/TO/users.csv');
-$csvDs->addTable('posts', 'PATH/TO/csv/posts.csv');
+// CSV を DataSet として読み込み
+$con = new \PHPUnit\DbUnit\Database\DefaultConnection($pdo);
+$csvDs = new CommentableCsvDataSet();
+$csvDs->setIgnoreColumnCount(1);    // 1列目はコメントとする
+$csvDs->addTable('users', __DIR__.'/unittest/fixtures/CsvDataSets/users.csv');
 
-// replace null
-$ds = new PHPUnit_Extensions_Database_DataSet_ReplacementDataSet($csvDs);
+// replae "<null>" to null
+$ds = new \PHPUnit\DbUnit\DataSet\ReplacementDataSet($csvDs);
 $ds->addFullReplacement('<null>', null);
 
-$op = PHPUnit_Extensions_Database_Operation_Factory::CLEAN_INSERT()->execute($con, $ds);
+// TRUNCATE -> INSERT の例
+\PHPUnit\DbUnit\Operation\Factory::CLEAN_INSERT()->execute($con, $ds);
+
+// TRUNCATE -> BULK INSERT の例
+\PHPUnit\DbUnit\Operation\Factory::TRUNCATE()->execute($con, $ds);
+(new MySqlBulkInsert())->execute($con, $ds);
+

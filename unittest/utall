@@ -1,0 +1,11 @@
+#!/bin/bash
+BASE_DIR="$(cd $(dirname $BASH_SOURCE) && pwd)"
+pushd $BASE_DIR >/dev/null
+
+[ "$PHP_BIN" == "" ] && PHP_BIN=/usr/local/bin/php
+PHPUNIT_BIN=../vendor/phpunit/phpunit/phpunit
+
+${PHP_BIN} ${PHPUNIT_BIN} ./tests
+
+popd >/dev/null
+
