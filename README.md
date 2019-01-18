@@ -13,13 +13,13 @@ Install
 UT用なので `require --dev` になる。
 
 ```bash
-composer require --dev iamapen/commentable-csv-data-set
+composer require --dev iamapen/commentable-data-set
 ```
 
 手動で composer.json に書く場合
 ```
 require-dev: {
-  "iamapen/commentable-csv-data-set ": ">=4.0"
+  "iamapen/commentable-data-set ": "^3.0"
 }
 ```
 
@@ -122,11 +122,11 @@ $con = new \PHPUnit\DbUnit\Database\DefaultConnection($pdo);
 
 
 # バージョン
-|             | php      | phpunit  | dbunit |
-|-------------|----------|----------|--------|
-| 4.0.x       | 7.1+     | 7.x      | 4.x    |
-| 3.0.x       | 7.0+     | 6.x      | 3.x    |
-| 2.0.x       | 5.4, 7.0 | 4.x, 5.x | 2.x    |
-| 1.1.x       | 5.3+     | 3.x, 4.x | 1.x    |
-| 1.0.x (EOL) | 5.3+     | 3.x      | 1.x    |
+|             | php        | phpunit  | dbunit |
+|-------------|------------|----------|--------|
+| 4.0.x       | 7.1+       | 7.x      | 4.x    |
+| 3.0.x       | 7.0+       | 6.x      | 3.x    |
+| 2.0.x       | 5.4+, 7.0+ | 4.x, 5.x | 2.x    |
+| 1.1.x       | 5.3+       | 3.x, 4.x | 1.x    |
+| 1.0.x (EOL) | 5.3+       | 3.x      | 1.x    |
 
