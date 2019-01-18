@@ -19,7 +19,7 @@ composer require --dev iamapen/commentable-data-set
 手動で composer.json に書く場合
 ```
 require-dev: {
-  "iamapen/commentable-data-set ": ">=4.0"
+  "iamapen/commentable-data-set ": "^4.0"
 }
 ```
 
