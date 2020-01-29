@@ -124,6 +124,7 @@ $con = new \PHPUnit\DbUnit\Database\DefaultConnection($pdo);
 # バージョン
 |             | php        | phpunit  | dbunit |
 |-------------|------------|----------|--------|
+| 5.0.x       | 7.2+       | 8.2, 9.x | 5.x    |
 | 4.0.x       | 7.1+       | 7.x      | 4.x    |
 | 3.0.x       | 7.0+       | 6.x      | 3.x    |
 | 2.0.x       | 5.4+, 7.0+ | 4.x, 5.x | 2.x    |
