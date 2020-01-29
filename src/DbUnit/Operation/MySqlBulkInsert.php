@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 namespace Iamapen\CommentableDataSet\DbUnit\Operation;
 
 use PHPUnit\DbUnit\Database\Connection;
