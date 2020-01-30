@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 namespace Iamapen\CommentableDataSet\Unittest;
 use Iamapen\CommentableDataSet\DbUnit\DataSet\ExcelCsvDataSet;
 
@@ -8,7 +8,7 @@ class ExcelCsvDataSetTest extends \PHPUnit\Framework\TestCase
 
     protected $orgLcCtype;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -22,7 +22,7 @@ class ExcelCsvDataSetTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         if (version_compare(PHP_VERSION, '5.3.0', '>') && 0 === strpos(PHP_OS, 'WIN')) {
             setlocale(LC_CTYPE, $this->orgLcCtype);
