@@ -1,8 +1,10 @@
 # Changes in dbunit-ExcelFriendlyDataSet
 
-## [1.2.0] - YYYY-MM-DD
+## [1.2.0] - 2020-02-06
 ### Changed
-- パッケージ名変更、前方互換レイヤ追加
+- パッケージ名変更 `dbunit-CommentableDataSet`
+### Fixed
+- php-5.3で動くよう依存関係を修正
 
 ## [1.1.1] - 2016-10-21
 ### Fixed
@@ -25,4 +27,3 @@
 ## [0.0.1] - 2014-01-17
 ### Added
 - ExcelCsvDataSet 追加
-
