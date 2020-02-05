@@ -6,6 +6,7 @@ phpunit/dbunit 用の DataSet や Operation の詰め合わせ。
 
 DBレコードを「1列目がコメントのCSV」で表現するための CsvDataSet など。  
 
+[![CircleCI](https://circleci.com/gh/iamapen/dbunit-CommentableDataSet.svg?style=shield)](https://circleci.com/gh/iamapen/dbunit-CommentableDataSet)
 
 Install
 =======
