@@ -1,6 +1,6 @@
 <?php
 
-namespace Iamapen\ExcelFriendlyDataSet\Database\DataSet;
+namespace Iamapen\CommentableDataSet\Database\DataSet;
 
 /**
  * Excel-friendly CSV DataSet. (multibyte locale)

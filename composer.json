@@ -1,11 +1,11 @@
 {
-  "name": "iamapen/excel-friendly-data-set",
+  "name": "iamapen/commentable-data-set",
   "type": "library",
-  "description": "Excel friendly CsvDataSet for DBUnit",
-  "homepage": "https://github.com/iamapen/dbunit-ExcelFriendlyDataSet",
+  "description": "Commentable CSV DataSet for DBUnit",
+  "homepage": "https://github.com/iamapen/dbunit-CommentableDataSet",
   "keywords": ["phpunit", "dbunit"],
   "license": "MIT",
- 
+
   "minimum-stability" : "stable",
   "authors": [
     {
@@ -16,26 +16,22 @@
 
   "require": {
     "php": ">=5.3.3",
-    "ext-pdo": "*",
-    "ext-mbstring": "*"
+    "ext-mbstring": "*",
+    "phpunit/dbunit": "~1.2"
   },
   "require-dev": {
-    "phpunit/phpunit": "~4.8",
-    "phpunit/dbunit": "~1.2",
-
-    "phpdocumentor/reflection-docblock": "~2.0.4"
+    "phpunit/phpunit": "~4.8"
   },
 
   "autoload": {
     "psr-4": {
+      "Iamapen\\CommentableDataSet\\": "src/lib/Iamapen/CommentableDataSet/",
       "Iamapen\\ExcelFriendlyDataSet\\": "src/lib/Iamapen/ExcelFriendlyDataSet/"
     }
   },
 
   "extra": {
     "_branch-alias": {
-      "dev-master": "1.0.x-dev"
     }
   }
 }
-

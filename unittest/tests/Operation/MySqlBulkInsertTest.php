@@ -1,5 +1,5 @@
 <?php
-use Iamapen\ExcelFriendlyDataSet\Database\Operation\MySqlBulkInsert;
+use Iamapen\CommentableDataSet\Database\Operation\MySqlBulkInsert;
 
 require_once dirname(dirname(__FILE__)) . "/../fixtures" . '/DatabaseTestUtility.php';
 

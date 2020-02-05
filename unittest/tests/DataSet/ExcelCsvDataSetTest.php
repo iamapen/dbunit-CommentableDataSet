@@ -1,7 +1,7 @@
 <?php
-namespace Iamapen\ExcelCsvDataSet\Unittest;
+namespace Iamapen\CommentableDataSet\Unittest;
 
-use Iamapen\ExcelFriendlyDataSet\Database\DataSet\ExcelCsvDataSet;
+use Iamapen\CommentableDataSet\Database\DataSet\ExcelCsvDataSet;
 
 class ExcelCsvDataSetTest extends \PHPUnit_Framework_TestCase
 {

@@ -1,5 +1,5 @@
 <?php
-use Iamapen\ExcelFriendlyDataSet\Database\DataSet\CommentableCsvDataSet;
+use Iamapen\CommentableDataSet\Database\DataSet\CommentableCsvDataSet;
 
 class CommentableCsvDataSetTest extends PHPUnit_Framework_TestCase
 {
